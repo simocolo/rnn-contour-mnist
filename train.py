@@ -24,14 +24,6 @@ try:
 except NameError:
     raw_input = input  # Python 3
 
-# Sample usage:
-#     # training
-#     python examples/sample.py --train_path $TRAIN_PATH --dev_path $DEV_PATH --expt_dir $EXPT_PATH
-#     # resuming from the latest checkpoint of the experiment
-#      python examples/sample.py --train_path $TRAIN_PATH --dev_path $DEV_PATH --expt_dir $EXPT_PATH --resume
-#      # resuming from a specific checkpoint
-#      python examples/sample.py --train_path $TRAIN_PATH --dev_path $DEV_PATH --expt_dir $EXPT_PATH --load_checkpoint $CHECKPOINT_DIR
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--train_path', action='store', dest='train_path', default='data/train/data.txt',
                     help='Path to train data')
@@ -148,7 +140,3 @@ while True:
     seq = seq_str.strip().split()
     print(predictor.predict(seq))
 
-# while True:
-#     seq_str = raw_input("Type in a source sequence:")
-#     seq = seq_str.strip().split()
-#     print(predictor.predict(seq))
