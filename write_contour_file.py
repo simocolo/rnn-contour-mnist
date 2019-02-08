@@ -17,11 +17,13 @@ import matplotlib.pyplot as plt
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--images_path', action='store', dest='images_path', default='data/train',
-                        help='Path to images')
+    parser.add_argument('--train_path', action='store', dest='train_path', default='data/train',
+                        help='Path to train folder')
+    parser.add_argument('--dev_path', action='store', dest='dev_path', default='data/dev',
+                        help='Path to dev folder')
+    parser.add_argument('--test_path', action='store', dest='test_path', default='data/test',
+                        help='Path to test folder')
     opt = parser.parse_args()
-
-
 
     dataset = datasets.MNIST(root='./data',
                                 download=True,
@@ -41,7 +43,14 @@ def main():
         contours = measure.find_contours(gimg, 0.8)
         contours = affine_transform(contours)
 
-        with open(os.path.join(opt.images_path,"data.txt"), "a") as f:
+        if(i<50000):
+            folder = opt.train_path
+        elif(i>=50000 and i<55000):
+            folder = opt.dev_path
+        else:
+            folder = opt.test_path
+
+        with open(os.path.join(folder,"data.txt"), "a") as f:
             string_contours = get_contours_string(contours)
             f.write(string_contours)
             f.write('\t')

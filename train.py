@@ -27,8 +27,10 @@ except NameError:
 parser = argparse.ArgumentParser()
 parser.add_argument('--train_path', action='store', dest='train_path', default='data/train/data.txt',
                     help='Path to train data')
-parser.add_argument('--dev_path', action='store', dest='dev_path', default=None,
+parser.add_argument('--dev_path', action='store', dest='dev_path', default='data/dev/data.txt',
                     help='Path to dev data')
+parser.add_argument('--test_path', action='store', dest='test_path', default='data/test/data.txt',
+                    help='Path to test data')
 parser.add_argument('--expt_dir', action='store', dest='expt_dir', default='./experiment',
                     help='Path to experiment directory. If load_checkpoint is True, then path to checkpoint directory has to be provided')
 parser.add_argument('--load_checkpoint', action='store', dest='load_checkpoint', default=None,
@@ -60,6 +62,11 @@ train = torchtext.data.TabularDataset(
 )
 dev = torchtext.data.TabularDataset(
     path=opt.dev_path, format='tsv',
+    fields=[('src', src), ('tgt', tgt)],
+    filter_pred=len_filter
+)
+test = torchtext.data.TabularDataset(
+    path=opt.test_path, format='tsv',
     fields=[('src', src), ('tgt', tgt)],
     filter_pred=len_filter
 )
@@ -95,10 +102,11 @@ else:
     if not opt.resume:
         # Initialize model
         hidden_size=128
+        n_layers=1
         bidirectional = True
-        encoder = EncoderRNN(len(src.vocab), max_len, hidden_size, n_layers=2,
+        encoder = EncoderRNN(len(src.vocab), max_len, hidden_size, n_layers=n_layers,
                              bidirectional=bidirectional, variable_lengths=True)
-        decoder = DecoderRNN(len(tgt.vocab), max_len, hidden_size * 2 if bidirectional else hidden_size, n_layers=2,
+        decoder = DecoderRNN(len(tgt.vocab), max_len, hidden_size * 2 if bidirectional else hidden_size, n_layers=n_layers,
                              dropout_p=0.2, use_attention=True, bidirectional=bidirectional,
                              eos_id=tgt.eos_id, sos_id=tgt.sos_id)
         seq2seq = Seq2seq(encoder, decoder)
@@ -117,11 +125,11 @@ else:
 
     # train
     t = SupervisedTrainer(loss=loss, batch_size=32,
-                          checkpoint_every=500,
+                          checkpoint_every=1000,
                           print_every=10, expt_dir=opt.expt_dir)
 
     seq2seq = t.train(seq2seq, train,
-                      num_epochs=6, dev_data=None,
+                      num_epochs=6, dev_data=dev,
                       optimizer=optimizer,
                       teacher_forcing_ratio=0.5,
                       resume=opt.resume)
@@ -132,11 +140,16 @@ predictor = Predictor(seq2seq, input_vocab, output_vocab)
 evaluator = Evaluator(loss=loss, batch_size=32)
 dev_loss, accuracy = evaluator.evaluate(seq2seq, dev)
 print("Dev %s: %.4f, Accuracy: %.4f" % (loss.name, dev_loss, accuracy))
+test_loss, accuracy = evaluator.evaluate(seq2seq, test)
+print("Test %s: %.4f, Accuracy: %.4f" % (loss.name, test_loss, accuracy))
 
 while True:
     draw.draw()
 
     seq_str = write_data.img_to_contours_string('img.png')
     seq = seq_str.strip().split()
-    print(predictor.predict(seq))
+    if(len(seq)>0):
+        print(predictor.predict(seq))
+    else:
+        print("No contours..try again!")
 

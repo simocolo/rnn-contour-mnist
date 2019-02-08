@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Write Contours Files",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/write_contour_file.py",
+            "console": "integratedTerminal",
+            "args": []
+        },
+        {
+            "name": "Train",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/train.py",
+            "console": "integratedTerminal",
+            "args": ["--train_path", "data/train/data.txt", "--dev_path", "data/dev/data.txt"]
+        },
+        {
+            "name": "Load",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/train.py",
+            "console": "integratedTerminal",
+            "args": ["--train_path", "data/train/data.txt", "--dev_path", "data/dev/data.txt", "--load_checkpoint", "2019_02_08_11_41_29"]
+        },
+    ]
+}

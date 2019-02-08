@@ -32,7 +32,7 @@ def draw():
     while(1):
         cv2.imshow('digit',img)
         k=cv2.waitKey(1)&0xFF
-        if k==27:
+        if k!=255:
             break
 
     cv2.imwrite('img.png', img)
