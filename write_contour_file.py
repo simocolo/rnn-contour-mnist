@@ -25,37 +25,56 @@ def main():
                         help='Path to test folder')
     opt = parser.parse_args()
 
-    dataset = datasets.MNIST(root='./data',
+    if not os.path.exists(opt.train_path):
+        os.makedirs(opt.train_path)
+    if not os.path.exists(opt.dev_path):
+        os.makedirs(opt.dev_path)
+    if not os.path.exists(opt.test_path):
+        os.makedirs(opt.test_path)
+
+    train_dataset = datasets.MNIST(root='./data', train=True,
                                 download=True,
                                 transform=transforms.Compose([
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.1307,), (0.3081,))
                             ]))
-    loader = DataLoader(dataset)
+    train_loader = DataLoader(train_dataset)
 
-    for i, image in enumerate(loader):
-        img, tgt = image
-        img = img.view(28,28).numpy()
-        tgt = tgt.numpy()[0]
+    test_dataset = datasets.MNIST(root='./data', train=False,
+                                download=True,
+                                transform=transforms.Compose([
+                                transforms.ToTensor(),
+                                transforms.Normalize((0.1307,), (0.3081,))
+                            ]))
+    test_loader = DataLoader(test_dataset)
 
-        gimg = color.colorconv.rgb2grey(img)
-
-        contours = measure.find_contours(gimg, 0.8)
-        contours = affine_transform(contours)
-
+    for i, image in enumerate(train_loader):
         if(i<50000):
             folder = opt.train_path
-        elif(i>=50000 and i<55000):
+        elif(i>=50000):
             folder = opt.dev_path
-        else:
-            folder = opt.test_path
+        write_file_line(folder, image)
 
-        with open(os.path.join(folder,"data.txt"), "a") as f:
-            string_contours = get_contours_string(contours)
-            f.write(string_contours)
-            f.write('\t')
-            f.write(str(tgt))
-            f.write('\n')
+    for i, image in enumerate(test_loader):
+        folder = opt.test_path
+        write_file_line(folder, image)
+
+def write_file_line(folder, image):
+    img, tgt = image
+    img = img.view(28,28).numpy()
+    tgt = tgt.numpy()[0]
+
+    gimg = color.colorconv.rgb2grey(img)
+
+    contours = measure.find_contours(gimg, 0.8)
+    contours = affine_transform(contours)
+
+    with open(os.path.join(folder,"data.txt"), "a") as f:
+        string_contours = get_contours_string(contours)
+        f.write(string_contours)
+        f.write('\t')
+        f.write(str(tgt))
+        f.write('\n')
 
 def affine_transform(contours):
     max_x=0

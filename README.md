@@ -22,7 +22,7 @@ In order to create the three datasets just call
 
     write_contour_file.py --train_path 'data/train' --dev_path 'data/dev' --test_path 'data/test'
 
-MNIST database will be then downloaded and the program iterates over it to create 50000 lines for training, 5000 for developing and 5000 for testing.
+MNIST database will be then downloaded and the program iterates over it to create 50000 lines for training, 10000 for developing and 10000 for testing.
 
 ## Training the model
 
@@ -36,7 +36,7 @@ To train the model call:
     Dev Perplexity: 1.0562, Accuracy: 0.9868
     Test Perplexity: 1.0378, Accuracy: 0.9897
 
-## Load a model
+## Load and test the network
 
 To a load a pre-trained model call:
 
