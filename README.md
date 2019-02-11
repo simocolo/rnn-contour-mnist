@@ -22,3 +22,24 @@ In order to create the three datasets just call
 
     write_contour_file.py --train_path 'data/train' --dev_path 'data/dev' --test_path 'data/test'
 
+MNIST database will be then downloaded and the program iterates over it to create 50000 lines for training, 5000 for developing and 5000 for testing.
+
+## Training the model
+
+To train the model call:
+
+    train.py --train_path 'data/train' --dev_path 'data/dev' --test_path 'data/test'
+
+    2019-02-11 15:47:34,856 seq2seq.trainer.supervised_trainer INFO     Progress: 0%, Train Perplexity: 13.9967
+    2019-02-11 15:47:36,609 seq2seq.trainer.supervised_trainer INFO     Progress: 0%, Train Perplexity: 3.6925
+    ...
+    Dev Perplexity: 1.0562, Accuracy: 0.9868
+    Test Perplexity: 1.0378, Accuracy: 0.9897
+
+## Load a model
+
+To a load a pre-trained model call:
+
+    train.py --load_checkpoint '2019_02_08_11_41_29' --train_path 'data/train' --dev_path 'data/dev' --test_path 'data/test'
+
+Once the program ends the training or loading the saved model, you will able to test results drawing a number by yourself.
