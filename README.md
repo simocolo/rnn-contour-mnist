@@ -8,3 +8,10 @@ Contours are taken from images using skimage's class 'measure'. Then they are wr
 Each line in these files represents the contours and each contour is separated by a comma. Each point of a contour is approx to a couple of integers representing x and y values (coordinates of that point in the image).
 
 This project uses seq2seq library from IBM - source https://github.com/IBM/pytorch-seq2seq
+
+## Create the datasets
+
+In order to create the three datasets just call 
+
+write_contour_file.py --train_path 'data/train' --dev_path 'data/dev' --test_path 'data/test'
+
