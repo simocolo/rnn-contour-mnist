@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import math
 
-from scipy import misc
+import imageio
 from skimage import color
 from skimage import measure
 from skimage.draw import ellipse
@@ -64,7 +64,7 @@ def write_file_line(folder, image):
     img = img.view(28,28).numpy()
     tgt = tgt.numpy()[0]
 
-    gimg = color.colorconv.rgb2grey(img)
+    gimg = color.colorconv.rgb2gray(img)
 
     contours = measure.find_contours(gimg, 0.8)
     contours = affine_transform(contours)
@@ -113,8 +113,9 @@ def get_contours_string(contours):
         contour_string += ' , '
     return contour_string
 
+
 def img_to_contours_string(file_name):
-    fimg = misc.imread(file_name)
+    fimg = imageio.imread(file_name)
     gimg = color.colorconv.rgb2grey(fimg)
     contours = measure.find_contours(gimg, 0.8)
     contours = affine_transform(contours)

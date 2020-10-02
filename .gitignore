@@ -3,3 +3,9 @@ seq2seq/
 data/
 __pycache__/
 img.png
+/rnn-contour-mnist.pyproj.user
+/rnn-contour-mnist.pyproj
+/.DS_Store
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/rnn-contour-mnist/v16/.suo
